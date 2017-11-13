@@ -1,0 +1,7 @@
+https://alvinalexander.com/perl/recipes/scrolling_list.txt
+https://alvinalexander.com/perl/recipes/textfield.txt
+https://redis.io/commands/hmset
+https://redis.io/commands/hgetall
+https://redis.io/commands/hlen
+https://www.tutorialspoint.com/redis/redis_hashes.htm
+http://perldoc.perl.org/CGI.html

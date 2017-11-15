@@ -25,7 +25,7 @@ print $query->start_html('Envío de reportes');
 # Si se llama al programa sin NINGÚN parámetro, se imprime el formulario #
 
 if (!$query->param) {
-	print $query->start_form(-method=>post);
+	print $query->start_form;
 	print $query->h2('Envío de reportes.');
 	print $query->label('Tu nombre: ');
 	print $query->textfield(-name=>'nombreyapellido',

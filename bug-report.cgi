@@ -31,7 +31,6 @@ if (!$query->param) {
 	print $query->textfield(-name=>'nombreyapellido',
 			-size=>25,
 			-maxlength=>50);
-	$nombreyapellidos = $query->param('nombreyapellido'); # Guardamos el nombre en una variable
 	
 	print $query->br;
 	print $query->br;
@@ -39,7 +38,6 @@ if (!$query->param) {
 	print $query->textfield(-name=>'email',
 			-size =>25,
 			-maxlength=>60);		
-	$email = $query->param('email');
 	
 	print $query->br;
 	print $query->br;
@@ -56,40 +54,37 @@ if (!$query->param) {
 					 -size=>7,
 					 -multiple=>'false',
 					 -default=>'Otro error');
-	$categoria = $query->param('categoria');
 	
     print $query->br;
     print $query->br;
-	print $query->label('Explica brevemente cómo ocurrió el error ');
+    print $query->label('Explica brevemente cómo ocurrió el error ');
     print $query->textfield(-name=>'datoserror',
 		-override=>1,
 		-default=>'Explíquenos cómo ocurrió el error aquí.',
 		-size=>50,
 		-maxlength=>80);
-	$datoserror = $query->param('datoserror');
 	print $query->br;
 	print $query->br;
 	print $query->submit('boton_de_envio','Enviar');
 	print $query->reset;
 	print $query->end_form;
-
-    # Creamos el hash con los datos introducidos por el usuario. No sé si está bien de sintáxis #
-	$redis->hmset("reportes","Error", name $nombreyapellidos email $email categoria $categoria
-	datoserror $datoserror);
-	
-	# Probar luego en redis.cli con un HGETALL datos para comprobar si se guardan.. #
-
-
 }
-
-# Si se llama al programa con el parámetro 'admin' te permite sacar un listado de los datos por pantalla #
-# No se si está bien de sintaxis #
-if($query->param('admin')){
-    print $query->h3('Datos de la BD Redis');
-	print $query->br;
-	print $query->br;
-	print $query->h5($redis->hgetall("reportes"));
+else {
+        # Si se llama al programa con el parámetro 'admin' te permite sacar un listado de los datos por pantalla #
+        $nombreyapellido = $query->param('nombreyapellido');
+        if($nombreyapellido eq 'admin') {
+           print $query->h3('Datos de la BD Redis');
+	   print $query->br;
+	   print $query->br;
+	   print $query->h5($redis->hgetall("reportes"));
+        }
+        else {
+          @categoria = $query->param('categoria');
+          $datoserror = $query->param('datoserror');
+          $email = $query->param('email');
+            # Creamos el hash con los datos introducidos por el usuario. No sé si está bien de sintáxis #
+  	  $redis->hmset("reportes","Error","$nombreyapellido:$email:$categoria[0]:$datoserror");
+        }
 }
-
 # Querría añadir que se creara un fichero de texto con todos los datos del hash creado en la bd redis, pero he 
 # buscado documentación y no encuentro nada al respecto.

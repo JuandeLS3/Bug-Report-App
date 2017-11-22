@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 #----------------------------------------------------------------------------------------------------------------#
-# Script de reporte de errores (bugs) que se importan en base de datos redis y se muestran en pantalla.          #
+# Script de reporte de errores (bugs) que se importan en una BD redis, fichero y muestra en pantalla             #
 # Creado por Juan Delgado Salmerón                                                                               #
 #----------------------------------------------------------------------------------------------------------------#
 
@@ -77,14 +77,24 @@ else {
 	   print $query->br;
 	   print $query->br;
 	   print $query->h5($redis->hgetall("reportes"));
+	   
+	   # Imprimirá por pantalla los erorres del fichero reporte.txt # 
+	   open F, '/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
+		  while(<F>) {
+				print "$_ <br>";
+			}
+		  close F;
+          }
         }
         else {
           @categoria = $query->param('categoria');
           $datoserror = $query->param('datoserror');
           $email = $query->param('email');
-            # Creamos el hash con los datos introducidos por el usuario. No sé si está bien de sintáxis #
-  	  $redis->hmset("reportes","Error","$nombreyapellido:$email:$categoria[0]:$datoserror");
-        }
+          # Creamos el hash con los datos introducidos por el usuario, con una estructura (':') accesible para otras apps #
+		  $redis->hmset("reportes","Error","$nombreyapellido:$email:$categoria[0]:$datoserror");
+		  # Sobreescribimos/Creamos fichero reporte con los datos introducidos en el formulario. #
+		  open F, '>>/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
+		  chomp;
+          print F "$nombreyapellido:$email:$categoria[0]:$datoserror \n";
+		  close F; 
 }
-# Querría añadir que se creara un fichero de texto con todos los datos del hash creado en la bd redis, pero he 
-# buscado documentación y no encuentro nada al respecto.

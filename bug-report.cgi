@@ -68,33 +68,30 @@ if (!$query->param) {
 	print $query->submit('boton_de_envio','Enviar');
 	print $query->reset;
 	print $query->end_form;
-}
-else {
-        # Si se llama al programa con el parámetro 'admin' te permite sacar un listado de los datos por pantalla #
-        $nombreyapellido = $query->param('nombreyapellido');
-        if($nombreyapellido eq 'admin') {
-           print $query->h3('Datos de la BD Redis');
-	   print $query->br;
-	   print $query->br;
-	   print $query->h5($redis->hgetall("reportes"));
-	   
-	   # Imprimirá por pantalla los erorres del fichero reporte.txt # 
-	   open F, '/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
-		  while(<F>) {
-				print "$_ <br>";
-			}
-		  close F;
-          }
-        }
-        else {
-          @categoria = $query->param('categoria');
-          $datoserror = $query->param('datoserror');
-          $email = $query->param('email');
-          # Creamos el hash con los datos introducidos por el usuario, con una estructura (':') accesible para otras apps #
-		  $redis->hmset("reportes","Error","$nombreyapellido:$email:$categoria[0]:$datoserror");
-		  # Sobreescribimos/Creamos fichero reporte con los datos introducidos en el formulario. #
-		  open F, '>>/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
-		  chomp;
-          print F "$nombreyapellido:$email:$categoria[0]:$datoserror \n";
-		  close F; 
+} else {
+	$nombreyapellido = $query->param('nombreyapellido');
+    # Si se llama al programa con el parámetro 'admin' te permite sacar un listado de los datos por pantalla #
+    if ($nombreyapellido eq 'admin') {
+        print $query->h3('Datos de la BD Redis');
+	    print $query->br;
+	    print $query->br;
+	    print $query->h5($redis->hgetall("reportes"));
+	    # Imprimirá por pantalla los erorres del fichero reporte.txt # 
+	    open F, '/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
+		while(<F>) {
+			print "$_ <br>";
+		}
+		close F;
+		# Si no se le llama con el parámetro admin, generará el fichero reportes y creará el hash en redis #
+    } else {
+		@categoria = $query->param('categoria');
+		$datoserror = $query->param('datoserror');
+		$email = $query->param('email');
+		# Creamos el hash con los datos introducidos por el usuario, con una estructura (':') accesible para otras apps #
+		$redis->hmset("reportes","Error","$nombreyapellido:$email:$categoria[0]:$datoserror");
+		# Sobreescribimos/Creamos fichero reporte con los datos introducidos en el formulario. #
+		open F, '>>/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
+		chomp;
+		print F "$nombreyapellido:$email:$categoria[0]:$datoserror \n";
+		close F; 
 }

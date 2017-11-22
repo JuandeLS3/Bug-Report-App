@@ -16,7 +16,11 @@ Para usar el script, tan solo hay que seguir unos sencillos pasos:
 - Iniciar el servidor apache 2 o el que usemos.
 
       #service apache2 start
-      
+	  
+ - Dar los permisos necesarios
+ 
+	  #chmod 644 bug-report.cgi
+
  - Iniciar el script CGI mediante un cliente web.
  
 # Monitoreo

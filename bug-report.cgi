@@ -88,10 +88,11 @@ if (!$query->param) {
 		$datoserror = $query->param('datoserror');
 		$email = $query->param('email');
 		# Creamos el hash con los datos introducidos por el usuario, con una estructura (':') accesible para otras apps #
-		$redis->hmset("reportes","Error","$nombreyapellido:$email:$categoria[0]:$datoserror");
+                $cont++;
+		$redis->hset("reportes","Error:$cont","$nombreyapellido:$email:$categoria[0]:$datoserror");
 		# Sobreescribimos/Creamos fichero reporte con los datos introducidos en el formulario. #
 		open F, '>>/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
-		chomp;
 		print F "$nombreyapellido:$email:$categoria[0]:$datoserror \n";
 		close F; 
+}
 }

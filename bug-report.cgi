@@ -73,10 +73,14 @@ if (!$query->param) {
     # Si se llama al programa con el parámetro 'admin' te permite sacar un listado de los datos por pantalla #
     if ($nombreyapellido eq 'admin') {
         print $query->h3('Datos de la BD Redis');
+	    print $query->h5("Se han añadido " . $cont . " reportes a la BD");
 	    print $query->br;
 	    print $query->br;
 	    print $query->h5($redis->hgetall("reportes"));
-	    # Imprimirá por pantalla los erorres del fichero reporte.txt # 
+	    print $query->br;
+
+	    # Imprimirá por pantalla los erorres del fichero reporte.txt #
+            print $query->h3('Datos del fichero /tmp/reporte.txt');
 	    open F, '/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
 		while(<F>) {
 			print "$_ <br>";
@@ -94,5 +98,5 @@ if (!$query->param) {
 		open F, '>>/tmp/reporte.txt' or die "ERR: El archivo no se puede abrir:$!";
 		print F "$nombreyapellido:$email:$categoria[0]:$datoserror \n";
 		close F; 
-}
+	}
 }

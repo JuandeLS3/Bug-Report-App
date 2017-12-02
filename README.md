@@ -1,5 +1,5 @@
-# Bug-report-CGI
-Reporte de errores a través de un Script CGI Perl. TP2.
+# Bug Report App
+Reporte de errores a través de un Script CGI Perl y PHP.
 
 # Requisitos
 - Servidor web, como por ejemplo Apache 2
@@ -12,8 +12,8 @@ Para usar el script, tan solo hay que seguir unos sencillos pasos:
 
       $./redis-server ../redis.conf
       
-- Introducir el script bug-report.cgi en la carpeta /cgi-bin de nuestro sistema.
-- Iniciar el servidor apache 2 o el que usemos.
+- Introducir el script bug-report.cgi en la carpeta /cgi-bin de nuestro sistema o el script php en /var/www/html o documentRoot.
+- Iniciar el servidor apache 2 o el que usemos. En caso de ejecución de PHP, tener el módulo PHP de Apache correctamente activado.
 
       #service apache2 start
 	  
@@ -21,7 +21,7 @@ Para usar el script, tan solo hay que seguir unos sencillos pasos:
  
 	  #chmod 644 bug-report.cgi
 
- - Iniciar el script CGI mediante un cliente web.
+ - Iniciar el script mediante un cliente web.
  
 # Monitoreo
 Podemos monitorear mediante el cliente redis la información que se guarda gracias al script.
